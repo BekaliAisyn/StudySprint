@@ -1,0 +1,16 @@
+PASS | 01 Main journey creates a budget-limited plan and exports progress
+PASS | 02 Switching strategies changes first session
+PASS | 03 Observer receives successful mutations
+PASS | 04 Save and reload tasks plans and session progress
+PASS | 05 Empty task title rejected without mutation
+PASS | 06 Duration and priority boundaries
+PASS | 07 Empty backlog and all-done backlog rejected
+PASS | 08 Invalid plan names and budgets rejected
+PASS | 09 Task CRUD retains independent saved snapshots
+PASS | 10 Disk failure preserves memory and emits no event
+PASS | 11 Corrupt storage rejected without overwriting
+PASS | 12 Decorator adds optional content without changing base
+PASS | 13 Missing objects and invalid session indexes rejected
+PASS | 14 Builder snapshot cannot be changed after build
+PASS | 15 Unicode and special characters survive storage
+RESULT: 15/15 tests passed
