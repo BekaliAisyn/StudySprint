@@ -1,0 +1,45 @@
+classDiagram
+    class StudyWindow
+    class StudyFacade
+    class PlanBuilder
+    class Plan
+    class Task
+    class Session
+    class SchedulingStrategy { <<interface>>
+        order(tasks)
+        name()
+    }
+    class DeadlineStrategy
+    class PriorityStrategy
+    class Repository { <<interface>>
+        load()
+        save(snapshot)
+    }
+    class PropertiesRepository
+    class Properties
+    class EventBus
+    class ActivityLog
+    class PlanReport { <<interface>>
+        render(plan)
+    }
+    class TextPlanReport
+    class ProgressReportDecorator
+    StudyWindow --> StudyFacade : use cases
+    StudyFacade --> Repository : stores snapshots
+    PropertiesRepository ..|> Repository
+    PropertiesRepository --> Properties : adapts key/value API
+    StudyFacade --> SchedulingStrategy : orders tasks
+    DeadlineStrategy ..|> SchedulingStrategy
+    PriorityStrategy ..|> SchedulingStrategy
+    StudyFacade --> PlanBuilder : assembles
+    PlanBuilder --> Plan : builds
+    Plan "1" *-- "1..*" Session
+    Session ..> Task : taskId and snapshot
+    StudyFacade --> Task : manages
+    StudyFacade --> EventBus : publishes after save
+    EventBus --> ActivityLog : notifies
+    EventBus --> StudyWindow : refresh callback
+    StudyFacade --> PlanReport : renders
+    TextPlanReport ..|> PlanReport
+    ProgressReportDecorator ..|> PlanReport
+    ProgressReportDecorator o-- PlanReport : wraps

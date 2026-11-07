@@ -1,0 +1,30 @@
+sequenceDiagram
+    actor Student
+    participant UI as StudyWindow
+    participant F as StudyFacade
+    participant S as SchedulingStrategy
+    participant B as PlanBuilder
+    participant R as PropertiesRepository
+    participant E as EventBus
+    participant L as ActivityLog
+    Student->>UI: Select strategy and generate(name, budget)
+    UI->>F: generate(name, budget, strategy)
+    F->>S: order(tasks)
+    S-->>F: unfinished tasks in selected order
+    F->>B: named / configured / add sessions
+    F->>B: build()
+    B-->>F: validated immutable Plan
+    F->>R: save(next snapshot)
+    alt write succeeds
+        R-->>F: success
+        Note over F: replace in-memory state
+        F->>E: publish(generated)
+        E->>L: accept(event)
+        E->>UI: refresh and status
+        F-->>UI: saved Plan
+        UI-->>Student: sessions and export preview
+    else write fails
+        R-->>F: IOException
+        F-->>UI: error; previous state preserved
+        UI-->>Student: error dialog; no success event
+    end
